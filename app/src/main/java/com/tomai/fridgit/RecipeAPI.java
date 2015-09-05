@@ -6,7 +6,6 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -19,8 +18,6 @@ import java.net.URL;
  * Created by admin on 9/3/15.
  */
 public class RecipeAPI {
-    private String urlString = "https://webknox-recipes.p.mashape.com/recipes/findByIngredients?ingredients=";
-    private String resultsAmount = "&number=5";
     private String keyString = "R4137EnBxzmshDqnV5fU7gnjxSjqp1EjeTPjsnaWFdR2Gxmn29";
     private static JSONArray searchResult;
     private Context context;
@@ -47,6 +44,8 @@ public class RecipeAPI {
         }
 
         try {
+            String urlString = "https://webknox-recipes.p.mashape.com/recipes/findByIngredients?ingredients=";
+            String resultsAmount = "&number=5";
             URL fullurl = new URL(urlString + recipeList + resultsAmount);
             HttpURLConnection conn = (HttpURLConnection) fullurl.openConnection();
             conn.setRequestProperty("X-Mashape-Key", keyString);
