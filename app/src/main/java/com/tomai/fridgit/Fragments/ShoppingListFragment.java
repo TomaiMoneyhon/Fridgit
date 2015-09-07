@@ -20,8 +20,8 @@ public class ShoppingListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View listFragment = inflater.inflate(R.layout.fragment_list, container, false);
         //JUST A TEST! TODO add a check list to fragment.
-        TextView testText = (TextView) listFragment.findViewById(R.id.test_text);
-        testText.setText("Shopping List");
+//        TextView testText = (TextView) listFragment.findViewById(R.id.test_text);
+//        testText.setText("Shopping List");
         //////////////
         return listFragment;
     }

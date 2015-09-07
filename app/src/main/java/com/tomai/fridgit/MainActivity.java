@@ -1,12 +1,19 @@
 package com.tomai.fridgit;
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 
 import com.tomai.fridgit.Adapters.TabAdapter;
+import com.tomai.fridgit.Adapters.TodoAdapter;
+
+import java.util.ArrayList;
 
 public class MainActivity extends ActionBarActivity {
     android.support.v7.app.ActionBar actionBar;
@@ -63,11 +70,21 @@ public class MainActivity extends ActionBarActivity {
             actionBar.addTab(actionBar.newTab().setText("Fridge List").setTabListener(tabListener));
         }
 
+        FloatingActionButton floatingButton = (FloatingActionButton)findViewById(R.id.fab);
+
+        floatingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO Create fragment for search that will connect to ingridients api and add to shopping list
+            }
+        });
         //TODO Start connecting 'Make food' button to search api from fridge list
 
 
 
-        ///////USE API FOR SEARCH RECIPES
+
+
+        ///////USE FOR API FOR SEARCH RECIPES
 //        RecipeAPI searchAPi = new RecipeAPI(this);
 //        String[] strings = {"Ham"};
 //        Handler handler = new Handler();
