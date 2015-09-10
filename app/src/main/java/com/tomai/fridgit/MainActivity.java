@@ -1,25 +1,39 @@
 package com.tomai.fridgit;
 
+import android.app.Activity;
+import android.app.FragmentManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 
 import com.tomai.fridgit.Adapters.TabAdapter;
-import com.tomai.fridgit.Adapters.TodoAdapter;
+import com.tomai.fridgit.Fragments.FridgeListFragment;
+import com.tomai.fridgit.Fragments.ShoppingListFragment;
 
 import java.util.ArrayList;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements ShoppingListFragment.ShoppingListenner {
     android.support.v7.app.ActionBar actionBar;
+
+    public static ArrayList<Item> fridgeItems = new ArrayList<>();
+    public static ArrayList<Item> shoppingItems = new ArrayList<>();
+
+    @NonNull
+    @Override
+    public FragmentManager getFragmentManager() {
+        return super.getFragmentManager();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Item ham = new Item("Ham",6, Item.amounts.Amounts);
+        shoppingItems.add(ham);
         setContentView(R.layout.activity_main);
         final ViewPager pager = (ViewPager)findViewById(R.id.pager);
         final TabAdapter tabAdapter = new TabAdapter(getSupportFragmentManager());
@@ -44,7 +58,7 @@ public class MainActivity extends ActionBarActivity {
         });
 
 
-        //TODO Check google play tab design. Is it worth it? (google play tab aren't deprecated.
+        //TODO Check google play tab design. Is it worth it? (google play tab aren't deprecated).
         actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setNavigationMode(android.support.v7.app.ActionBar.NAVIGATION_MODE_TABS);
@@ -119,6 +133,11 @@ public class MainActivity extends ActionBarActivity {
     }
 
     @Override
+    public void moveToFridge(Item item) {
+    fridgeItems.add(item);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -139,4 +158,5 @@ public class MainActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }

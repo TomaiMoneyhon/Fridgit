@@ -6,23 +6,48 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 
+import com.tomai.fridgit.Adapters.ShoppingListAdapter;
+import com.tomai.fridgit.Item;
+import com.tomai.fridgit.MainActivity;
 import com.tomai.fridgit.R;
 
 /**
  * Created by admin on 9/4/15.
  */
-public class ShoppingListFragment extends Fragment {
+public class ShoppingListFragment extends Fragment implements ShoppingListAdapter.TodoAdapterListenner {
+
+    ShoppingListenner shoppingListener;
+    ListAdapter todoAdapter;
+
+    @Override
+    public void getCheckedItem(Item item) {
+        shoppingListener.moveToFridge(item);
+    }
+
+    public interface ShoppingListenner {
+        void moveToFridge (Item item);
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View listFragment = inflater.inflate(R.layout.fragment_list, container, false);
         //JUST A TEST! TODO add a check list to fragment.
-//        TextView testText = (TextView) listFragment.findViewById(R.id.test_text);
-//        testText.setText("Shopping List");
+
+        todoAdapter = new ShoppingListAdapter(getContext(), MainActivity.shoppingItems);
+
+        final ListView listView = (ListView)listFragment.findViewById(R.id.listView);
+        listView.setAdapter(todoAdapter);
+
+
+
         //////////////
         return listFragment;
+    }
+    public void refreshTodoadapter() {
+        todoAdapter = new ShoppingListAdapter(getContext(), MainActivity.shoppingItems);
     }
 }
