@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.tomai.fridgit.Adapters.ShoppingListAdapter;
@@ -17,37 +16,20 @@ import com.tomai.fridgit.R;
 /**
  * Created by admin on 9/4/15.
  */
-public class ShoppingListFragment extends Fragment implements ShoppingListAdapter.TodoAdapterListenner {
+public class ShoppingListFragment extends Fragment {
 
-    ShoppingListenner shoppingListener;
-    ListAdapter todoAdapter;
-
-    @Override
-    public void getCheckedItem(Item item) {
-        shoppingListener.moveToFridge(item);
-    }
-
-    public interface ShoppingListenner {
-        void moveToFridge (Item item);
-    }
+    ShoppingListAdapter todoAdapter;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View listFragment = inflater.inflate(R.layout.fragment_list, container, false);
-        //JUST A TEST! TODO add a check list to fragment.
+        View listFragment = inflater.inflate(R.layout.shopping_list_fragment, container, false);
 
         todoAdapter = new ShoppingListAdapter(getContext(), MainActivity.shoppingItems);
 
         final ListView listView = (ListView)listFragment.findViewById(R.id.listView);
         listView.setAdapter(todoAdapter);
 
-
-
-        //////////////
         return listFragment;
-    }
-    public void refreshTodoadapter() {
-        todoAdapter = new ShoppingListAdapter(getContext(), MainActivity.shoppingItems);
     }
 }

@@ -5,6 +5,7 @@ import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,44 +13,34 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 
 
 /**
  * Created by admin on 9/3/15.
  */
-public class RecipeAPI {
-    private String keyString = "R4137EnBxzmshDqnV5fU7gnjxSjqp1EjeTPjsnaWFdR2Gxmn29";
-    private static JSONArray searchResult;
+public class SearchAutoCompleteAPI {
+    private String keyString = "55f1aa50cea6951604000005";
+    private static JSONArray autoCompleteResult;
     private Context context;
+    private ArrayList<String> suggestions;
 
-
-    public RecipeAPI(Context context) {
+    public SearchAutoCompleteAPI(Context context) {
         this.context = context;
     }
 
-    public JSONArray getSearchResult() {
-        return searchResult;
+    public JSONArray getAutoCompleteResult() {
+        return autoCompleteResult;
     }
 
-    public void Search (String [] ingredients) {
-        int counter = 0;
-        String recipeList = "";
-
-        for (String ingredient : ingredients) {
-            if (ingredients.length-1 == counter) recipeList = recipeList + ingredient;
-            else {
-                counter++;
-                recipeList = recipeList + (ingredient + "%2C");
-            }
-        }
+    public ArrayList<String> autoComplete (String searchTerm) {
 
         try {
-            String urlString = "https://webknox-recipes.p.mashape.com/recipes/findByIngredients?ingredients=";
-            String resultsAmount = "&number=5";
-            URL fullurl = new URL(urlString + recipeList + resultsAmount);
+            String urlString = "http://api.recipeon.us/2.0/ingredient/suggest/";
+            URL fullurl = new URL(urlString + keyString+ "/" + searchTerm + "/");
             HttpURLConnection conn = (HttpURLConnection) fullurl.openConnection();
-            conn.setRequestProperty("X-Mashape-Key", keyString);
-            conn.setRequestProperty("Accept", "application/json");
+//            conn.setRequestProperty("X-Mashape-Key", keyString);
+//            conn.setRequestProperty("Accept", "application/json");
 
             conn.connect();
 
@@ -67,7 +58,14 @@ public class RecipeAPI {
                 }
                 br.close();
 
-                searchResult = new JSONArray(sb.toString());
+                 autoCompleteResult = new JSONArray(sb.toString());
+                suggestions = new ArrayList<>();
+                for (int i = 0 ; i < autoCompleteResult.length() ; i++) {
+                     JSONObject jsonObject = autoCompleteResult.getJSONObject(i);
+                    String suggestion = jsonObject.getString("label");
+                    suggestions.add(suggestion);
+                }
+
             }
 
         } catch (MalformedURLException e) {
@@ -77,6 +75,7 @@ public class RecipeAPI {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        return suggestions;
     }
 
 

@@ -1,10 +1,7 @@
 package com.tomai.fridgit.Adapters;
 
-import android.app.Activity;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +10,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
-import com.tomai.fridgit.Fragments.FridgeListFragment;
 import com.tomai.fridgit.Item;
 import com.tomai.fridgit.MainActivity;
 import com.tomai.fridgit.R;
@@ -25,23 +21,13 @@ import java.util.ArrayList;
  * Created by admin on 9/7/15.
  */
 public class ShoppingListAdapter extends ArrayAdapter<Item> {
-    Activity activity;
     Item oneItem;
 
     Handler handler = new Handler();
 
     public ShoppingListAdapter(Context context, ArrayList<Item> items) {
         super(context, R.layout.shopping_list_adapter, items);
-        activity = (MainActivity) context;
     }
-
-    TodoAdapterListenner todoAdapterListener;
-
-    public interface TodoAdapterListenner {
-        void getCheckedItem (Item item);
-    }
-
-
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
@@ -75,14 +61,14 @@ public class ShoppingListAdapter extends ArrayAdapter<Item> {
                             handler.post(new Runnable() {
                                 @Override
                                 public void run() {
+
                                     customView.setVisibility(View.GONE);
                                 }
                             });
+                            MainActivity.shoppingItems.remove(oneItem);
                             MainActivity.fridgeItems.add(oneItem);
                         }
                     }.start();
-
-                   activity.getFragmentManager().findFragmentByTag("fridge_frag");
 
                 }
             }

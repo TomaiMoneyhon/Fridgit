@@ -1,9 +1,6 @@
 package com.tomai.fridgit;
 
-import android.app.Activity;
-import android.app.FragmentManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
@@ -12,29 +9,25 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.tomai.fridgit.Adapters.TabAdapter;
-import com.tomai.fridgit.Fragments.FridgeListFragment;
-import com.tomai.fridgit.Fragments.ShoppingListFragment;
 
 import java.util.ArrayList;
 
-public class MainActivity extends ActionBarActivity implements ShoppingListFragment.ShoppingListenner {
+public class MainActivity extends ActionBarActivity {
     android.support.v7.app.ActionBar actionBar;
 
     public static ArrayList<Item> fridgeItems = new ArrayList<>();
     public static ArrayList<Item> shoppingItems = new ArrayList<>();
 
-    @NonNull
-    @Override
-    public FragmentManager getFragmentManager() {
-        return super.getFragmentManager();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        ///TEMPORARY ADD ITEM
         Item ham = new Item("Ham",6, Item.amounts.Amounts);
         shoppingItems.add(ham);
-        setContentView(R.layout.activity_main);
+        ////////////////
+
         final ViewPager pager = (ViewPager)findViewById(R.id.pager);
         final TabAdapter tabAdapter = new TabAdapter(getSupportFragmentManager());
 
@@ -49,6 +42,8 @@ public class MainActivity extends ActionBarActivity implements ShoppingListFragm
             @Override
             public void onPageSelected(int position) {
                 actionBar.setSelectedNavigationItem(position);
+                pager.getAdapter().notifyDataSetChanged();
+
             }
 
             @Override
@@ -90,6 +85,7 @@ public class MainActivity extends ActionBarActivity implements ShoppingListFragm
             @Override
             public void onClick(View v) {
                 //TODO Create fragment for search that will connect to ingridients api and add to shopping list
+                
             }
         });
         //TODO Start connecting 'Make food' button to search api from fridge list
@@ -132,10 +128,7 @@ public class MainActivity extends ActionBarActivity implements ShoppingListFragm
 
     }
 
-    @Override
-    public void moveToFridge(Item item) {
-    fridgeItems.add(item);
-    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
