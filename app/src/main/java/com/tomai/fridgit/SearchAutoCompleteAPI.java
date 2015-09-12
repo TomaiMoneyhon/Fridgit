@@ -23,21 +23,21 @@ public class SearchAutoCompleteAPI {
     private String keyString = "55f1aa50cea6951604000005";
     private static JSONArray autoCompleteResult;
     private Context context;
-    private ArrayList<String> suggestions;
+    private ArrayList<String> suggestions = new ArrayList<>();
 
     public SearchAutoCompleteAPI(Context context) {
         this.context = context;
     }
 
-    public JSONArray getAutoCompleteResult() {
-        return autoCompleteResult;
+    public ArrayList<String> getsuggestions() {
+        return suggestions;
     }
 
-    public ArrayList<String> autoComplete (String searchTerm) {
+    public ArrayList autoComplete (String searchTerm) {
 
         try {
             String urlString = "http://api.recipeon.us/2.0/ingredient/suggest/";
-            URL fullurl = new URL(urlString + keyString+ "/" + searchTerm + "/");
+            URL fullurl = new URL(urlString + keyString+ "/" + searchTerm.toLowerCase() + "/");
             HttpURLConnection conn = (HttpURLConnection) fullurl.openConnection();
 //            conn.setRequestProperty("X-Mashape-Key", keyString);
 //            conn.setRequestProperty("Accept", "application/json");
@@ -48,6 +48,7 @@ public class SearchAutoCompleteAPI {
 
             if (response >= 400) {
                 Toast.makeText(context,"Somthing bad happened",Toast.LENGTH_LONG).show();
+                suggestions = null;
             }
             else {
                 BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));

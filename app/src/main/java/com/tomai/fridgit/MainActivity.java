@@ -1,5 +1,6 @@
 package com.tomai.fridgit;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
@@ -85,7 +86,8 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 //TODO Create fragment for search that will connect to ingridients api and add to shopping list
-                
+                Intent intent = new Intent(MainActivity.this,SearchActivity.class);
+                startActivity(intent);
             }
         });
         //TODO Start connecting 'Make food' button to search api from fridge list
