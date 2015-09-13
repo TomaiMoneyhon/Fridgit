@@ -23,7 +23,7 @@ public class SearchActivity extends Activity {
 
         autoCompleteInput = (AutoCompleteTextView)findViewById(R.id.autocomplete_input);
         autoCompleteInput.setAdapter(new SuggestionAdapter(this,autoCompleteInput.getText().toString()));
-        
+
 
         addButton = (Button)findViewById(R.id.add_ingredient_btn);
         addButton.setOnClickListener(new View.OnClickListener() {
