@@ -21,7 +21,6 @@ import java.util.ArrayList;
  */
 public class SearchAutoCompleteAPI {
     private String keyString = "55f1aa50cea6951604000005";
-    private static JSONArray autoCompleteResult;
     private Context context;
     private ArrayList<String> suggestions = new ArrayList<>();
 
@@ -29,18 +28,12 @@ public class SearchAutoCompleteAPI {
         this.context = context;
     }
 
-    public ArrayList<String> getsuggestions() {
-        return suggestions;
-    }
-
     public ArrayList autoComplete (String searchTerm) {
 
         try {
             String urlString = "http://api.recipeon.us/2.0/ingredient/suggest/";
-            URL fullurl = new URL(urlString + keyString+ "/" + searchTerm.toLowerCase() + "/");
+            URL fullurl = new URL(urlString + keyString + "/" + searchTerm.toLowerCase() + "/");
             HttpURLConnection conn = (HttpURLConnection) fullurl.openConnection();
-//            conn.setRequestProperty("X-Mashape-Key", keyString);
-//            conn.setRequestProperty("Accept", "application/json");
 
             conn.connect();
 
@@ -59,7 +52,7 @@ public class SearchAutoCompleteAPI {
                 }
                 br.close();
 
-                 autoCompleteResult = new JSONArray(sb.toString());
+                JSONArray autoCompleteResult = new JSONArray(sb.toString());
                 suggestions = new ArrayList<>();
                 for (int i = 0 ; i < autoCompleteResult.length() ; i++) {
                      JSONObject jsonObject = autoCompleteResult.getJSONObject(i);

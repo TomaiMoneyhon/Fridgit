@@ -16,7 +16,7 @@ public class SuggestionAdapter extends ArrayAdapter<String> {
     private ArrayList<String> suggestions;
     public SuggestionAdapter(Activity context, String nameFilter) {
         super(context, android.R.layout.simple_dropdown_item_1line);
-        suggestions = new ArrayList<String>();
+        suggestions = new ArrayList<>();
     }
 
     @Override

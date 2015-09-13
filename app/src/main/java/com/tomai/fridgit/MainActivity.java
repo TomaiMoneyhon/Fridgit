@@ -8,6 +8,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 
 import com.tomai.fridgit.Adapters.TabAdapter;
 
@@ -85,12 +86,19 @@ public class MainActivity extends ActionBarActivity {
         floatingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO Create fragment for search that will connect to ingridients api and add to shopping list
                 Intent intent = new Intent(MainActivity.this,SearchActivity.class);
                 startActivity(intent);
             }
         });
-        //TODO Start connecting 'Make food' button to search api from fridge list
+
+        Button makeFoodBTN = (Button)findViewById(R.id.get_food_btn);
+        makeFoodBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO Start connecting 'Make food' button to search api from fridge list
+            }
+        });
+
 
 
 

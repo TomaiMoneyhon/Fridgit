@@ -18,18 +18,15 @@ import com.tomai.fridgit.R;
  */
 
 public class FridgeListFragment extends Fragment{
-    FridgeListAdapter todoAdapter;
-    ListView listView;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View listFragment = inflater.inflate(R.layout.fridge_list_fragment,container,false);
-        listFragment.setTag("fridge_frag");
 
-        todoAdapter = new FridgeListAdapter(getContext(), MainActivity.fridgeItems);
+        FridgeListAdapter todoAdapter = new FridgeListAdapter(getContext(), MainActivity.fridgeItems);
 
-        listView = (ListView)listFragment.findViewById(R.id.listView);
+        ListView listView = (ListView) listFragment.findViewById(R.id.listView);
         listView.setAdapter(todoAdapter);
 
         return listFragment;

@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.tomai.fridgit.Adapters.ShoppingListAdapter;
-import com.tomai.fridgit.Item;
 import com.tomai.fridgit.MainActivity;
 import com.tomai.fridgit.R;
 
@@ -18,14 +17,12 @@ import com.tomai.fridgit.R;
  */
 public class ShoppingListFragment extends Fragment {
 
-    ShoppingListAdapter todoAdapter;
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View listFragment = inflater.inflate(R.layout.shopping_list_fragment, container, false);
 
-        todoAdapter = new ShoppingListAdapter(getContext(), MainActivity.shoppingItems);
+        ShoppingListAdapter todoAdapter = new ShoppingListAdapter(getContext(), MainActivity.shoppingItems);
 
         final ListView listView = (ListView)listFragment.findViewById(R.id.listView);
         listView.setAdapter(todoAdapter);
