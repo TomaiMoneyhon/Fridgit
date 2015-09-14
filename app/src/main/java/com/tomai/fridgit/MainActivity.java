@@ -1,6 +1,7 @@
 package com.tomai.fridgit;
 
-import android.content.Intent;
+import android.app.Activity;
+import android.app.DialogFragment;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
@@ -11,24 +12,65 @@ import android.view.View;
 import android.widget.Button;
 
 import com.tomai.fridgit.Adapters.TabAdapter;
+import com.tomai.fridgit.Dialogs.AddDialog;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.StreamCorruptedException;
 import java.util.ArrayList;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements AddDialog.OnAddDialogListener {
     android.support.v7.app.ActionBar actionBar;
 
-    public static ArrayList<Item> fridgeItems = new ArrayList<>();
-    public static ArrayList<Item> shoppingItems = new ArrayList<>();
+    String SHOPPINGLIST_FILENAME = "shoppingList.dat";
+    String FRIDGELIST_FILENAME = "fridgeList.dat";
+
+    public static ArrayList<Item> fridgeItems;
+    public static ArrayList<Item> shoppingItems;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ///TEMPORARY ADD ITEM
-        Item ham = new Item("Ham",6, Item.amounts.Amounts);
-        shoppingItems.add(ham);
-        ////////////////
+        //TODO add a internal storage checker for "frideItems" and "shoppingItems" arrays lists.
+        FileInputStream shoppingFIS = null;
+        ObjectInputStream shoppingOIS = null;
+        shoppingItems = null;
+
+        FileInputStream fridgeFIS = null;
+        ObjectInputStream fridgeOIS = null;
+        fridgeItems = null;
+
+        try {
+            shoppingFIS = openFileInput(SHOPPINGLIST_FILENAME);
+            shoppingOIS = new ObjectInputStream(shoppingFIS);
+            shoppingItems = (ArrayList<Item>)shoppingOIS.readObject();
+            fridgeFIS = openFileInput(FRIDGELIST_FILENAME);
+            fridgeOIS = new ObjectInputStream(fridgeFIS);
+            fridgeItems = (ArrayList<Item>)shoppingOIS.readObject();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (StreamCorruptedException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+             try {
+                 if (shoppingOIS != null) shoppingOIS.close();
+                 if (fridgeOIS != null) fridgeOIS.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        if(shoppingItems == null) shoppingItems = new ArrayList<>();
+        if(fridgeItems == null) fridgeItems = new ArrayList<>();
 
         final ViewPager pager = (ViewPager)findViewById(R.id.pager);
         final TabAdapter tabAdapter = new TabAdapter(getSupportFragmentManager());
@@ -86,8 +128,9 @@ public class MainActivity extends ActionBarActivity {
         floatingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,SearchActivity.class);
-                startActivity(intent);
+                DialogFragment addIngredient = new AddDialog();
+                addIngredient.show(getFragmentManager(),"addDialog");
+
             }
         });
 
@@ -138,7 +181,38 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //TODO Save to internal storage "frideItems" and "shoppingItems" arrays lists.
+        FileOutputStream shoppingFOS = null;
+        ObjectOutputStream shoppingOOS = null;
 
+        FileOutputStream fridgeFOS = null;
+        ObjectOutputStream fridgeOOS = null;
+
+        try {
+            shoppingFOS = openFileOutput(SHOPPINGLIST_FILENAME,MODE_PRIVATE);
+            shoppingOOS = new ObjectOutputStream(shoppingFOS);
+            shoppingOOS.writeObject(shoppingItems);
+
+            fridgeFOS = openFileOutput(FRIDGELIST_FILENAME,MODE_PRIVATE);
+            fridgeOOS = new ObjectOutputStream(fridgeFOS);
+            fridgeOOS.writeObject(fridgeItems);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+             try {
+                 if (shoppingOOS != null) shoppingOOS.close();
+                 if (fridgeOOS != null) fridgeOOS.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -162,4 +236,8 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void OnAddListener(Item item) {
+        shoppingItems.add(item);
+    }
 }

@@ -10,7 +10,7 @@ public class Item {
     public enum amounts {
             Grams,
             Liters,
-            Amounts
+            Units
     }
     //TODO add kind of amount (grams, liter, amount) and have a option to set either imperial or metric
 
