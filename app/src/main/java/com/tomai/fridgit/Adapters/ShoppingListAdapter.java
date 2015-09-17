@@ -48,7 +48,7 @@ public class ShoppingListAdapter extends ArrayAdapter<Item> {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 checkBox.setChecked(true);
-
+               final Item checkedItem = MainActivity.shoppingItems.get(position);
                 if (isChecked) {
                     new Thread() {
                         @Override
@@ -65,8 +65,8 @@ public class ShoppingListAdapter extends ArrayAdapter<Item> {
                                     customView.setVisibility(View.GONE);
                                 }
                             });
-                            MainActivity.shoppingItems.remove(oneItem);
-                            MainActivity.fridgeItems.add(oneItem);
+                            MainActivity.shoppingItems.remove(checkedItem);
+                            MainActivity.fridgeItems.add(checkedItem);
                         }
                     }.start();
 

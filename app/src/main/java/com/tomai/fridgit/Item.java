@@ -1,9 +1,11 @@
 package com.tomai.fridgit;
 
+import java.io.Serializable;
+
 /**
  * Created by admin on 9/7/15.
  */
-public class Item {
+public class Item implements Serializable {
     private String name;
     private int amount;
     amounts amountKind;

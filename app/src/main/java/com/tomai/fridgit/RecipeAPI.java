@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 
 
 /**
@@ -31,15 +32,15 @@ public class RecipeAPI {
         return searchResult;
     }
 
-    public void Search (String [] ingredients) {
-        int counter = 0;
+    public void Search (ArrayList<Item> ingredients) {
+       // int counter = 0;
         String recipeList = "";
 
-        for (String ingredient : ingredients) {
-            if (ingredients.length-1 == counter) recipeList = recipeList + ingredient;
+        for (int i = 0 ; i < ingredients.size(); i++) {
+            if (ingredients.size() == i + 1) recipeList = recipeList + ingredients.get(i).getName();
             else {
-                counter++;
-                recipeList = recipeList + (ingredient + "%2C");
+                //counter++;
+                recipeList = recipeList + (ingredients.get(i).getName() + "%2C");
             }
         }
 

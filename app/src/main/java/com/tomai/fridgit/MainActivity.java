@@ -2,6 +2,7 @@ package com.tomai.fridgit;
 
 import android.app.Activity;
 import android.app.DialogFragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
@@ -52,7 +53,7 @@ public class MainActivity extends ActionBarActivity implements AddDialog.OnAddDi
             shoppingItems = (ArrayList<Item>)shoppingOIS.readObject();
             fridgeFIS = openFileInput(FRIDGELIST_FILENAME);
             fridgeOIS = new ObjectInputStream(fridgeFIS);
-            fridgeItems = (ArrayList<Item>)shoppingOIS.readObject();
+            fridgeItems = (ArrayList<Item>)fridgeOIS.readObject();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (StreamCorruptedException e) {
@@ -139,6 +140,8 @@ public class MainActivity extends ActionBarActivity implements AddDialog.OnAddDi
             @Override
             public void onClick(View v) {
                 //TODO Start connecting 'Make food' button to search api from fridge list
+                Intent intent = new Intent(MainActivity.this,RecipesActivity.class);
+                startActivity(intent);
             }
         });
 
