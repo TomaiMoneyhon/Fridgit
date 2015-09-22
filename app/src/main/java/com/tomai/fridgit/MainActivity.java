@@ -1,6 +1,5 @@
 package com.tomai.fridgit;
 
-import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -38,12 +37,11 @@ public class MainActivity extends ActionBarActivity implements AddDialog.OnAddDi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //TODO add a internal storage checker for "frideItems" and "shoppingItems" arrays lists.
-        FileInputStream shoppingFIS = null;
+        FileInputStream shoppingFIS;
         ObjectInputStream shoppingOIS = null;
         shoppingItems = null;
 
-        FileInputStream fridgeFIS = null;
+        FileInputStream fridgeFIS;
         ObjectInputStream fridgeOIS = null;
         fridgeItems = null;
 
@@ -139,8 +137,7 @@ public class MainActivity extends ActionBarActivity implements AddDialog.OnAddDi
         makeFoodBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO Start connecting 'Make food' button to search api from fridge list
-                Intent intent = new Intent(MainActivity.this,RecipesActivity.class);
+                Intent intent = new Intent(MainActivity.this,RecipesPreviewActivity.class);
                 startActivity(intent);
             }
         });
@@ -187,11 +184,10 @@ public class MainActivity extends ActionBarActivity implements AddDialog.OnAddDi
     @Override
     protected void onPause() {
         super.onPause();
-        //TODO Save to internal storage "frideItems" and "shoppingItems" arrays lists.
-        FileOutputStream shoppingFOS = null;
+        FileOutputStream shoppingFOS;
         ObjectOutputStream shoppingOOS = null;
 
-        FileOutputStream fridgeFOS = null;
+        FileOutputStream fridgeFOS;
         ObjectOutputStream fridgeOOS = null;
 
         try {

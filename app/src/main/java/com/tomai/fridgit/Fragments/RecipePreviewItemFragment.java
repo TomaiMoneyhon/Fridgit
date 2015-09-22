@@ -32,12 +32,32 @@ import java.net.URL;
 /**
  * Created by admin on 9/4/15.
  */
-public class RecipeListFragment extends Fragment {
+public class RecipePreviewItemFragment extends Fragment {
+
+     public interface ChosenRecipeListener {
+         void getID(int id);
+    }
+
+    ChosenRecipeListener mCallback;
+
     static public int recipeCount;
+    private int recipeID;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        try {
+            mCallback = (ChosenRecipeListener)activity; //the activity who attached the fragment will implement the interface
+        }catch (ClassCastException ex) {
+            throw new ClassCastException(activity.toString() + " must implement OnRegisterFragmentListener");
+        }
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View recipeView = inflater.inflate(R.layout.recipe_list_fragment, container, false);
+        final View recipeView = inflater.inflate(R.layout.recipe_preview_item_fragment, container, false);
 
         final TextView title = (TextView)recipeView.findViewById(R.id.recipe_title);
         final TextView missingAmount = (TextView)recipeView.findViewById(R.id.recipe_missing_ingredients);
@@ -70,6 +90,7 @@ public class RecipeListFragment extends Fragment {
                        oneRecipe = searchAPi.getSearchResult().getJSONObject(0);
                         drawable = getthumbnail(oneRecipe.getString("image"));
 
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -77,11 +98,14 @@ public class RecipeListFragment extends Fragment {
                         @Override
                         public void run() {
                             try {
+                                mCallback.getID(oneRecipe.getInt("id"));
+                               // recipeID = oneRecipe.getInt("id");
                                 title.setText(oneRecipe.getString("title"));
                                 outof = oneRecipe.getInt("usedIngredientCount") + "/" + oneRecipe.getInt("missedIngredientCount");
                                 missingAmount.setText(outof);
-//                                thumbnail.setImageDrawable(getthumbnail(oneRecipe.getString("image")));
-                                mainLayout.setBackground(drawable);
+                                //TODO Chosse either to set image as background or as a imageView.
+                                //thumbnail.setImageDrawable(getthumbnail(oneRecipe.getString("image"))); //IMAGEVIEW
+                                mainLayout.setBackground(drawable); //BACKGROUND
                                 progressBar.setVisibility(View.GONE);
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -94,7 +118,6 @@ public class RecipeListFragment extends Fragment {
         } else {
             Toast.makeText(getActivity(),"No internet connection.", Toast.LENGTH_LONG).show();
         }
-
         return recipeView;
     }
     public Drawable getthumbnail (final String url) {

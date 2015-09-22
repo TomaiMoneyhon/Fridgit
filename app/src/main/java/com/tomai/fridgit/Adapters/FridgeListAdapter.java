@@ -1,17 +1,13 @@
 package com.tomai.fridgit.Adapters;
 
 import android.content.Context;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.tomai.fridgit.Item;
-import com.tomai.fridgit.MainActivity;
 import com.tomai.fridgit.R;
 
 import java.util.ArrayList;

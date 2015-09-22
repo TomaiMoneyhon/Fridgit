@@ -22,6 +22,7 @@ public class RecipeAPI {
     private String keyString = "R4137EnBxzmshDqnV5fU7gnjxSjqp1EjeTPjsnaWFdR2Gxmn29";
     private static JSONArray searchResult;
     private Context context;
+    private static JSONArray choosenRecipe;
 
 
     public RecipeAPI(Context context) {
@@ -33,13 +34,11 @@ public class RecipeAPI {
     }
 
     public void Search (ArrayList<Item> ingredients) {
-       // int counter = 0;
         String recipeList = "";
 
         for (int i = 0 ; i < ingredients.size(); i++) {
             if (ingredients.size() == i + 1) recipeList = recipeList + ingredients.get(i).getName();
             else {
-                //counter++;
                 recipeList = recipeList + (ingredients.get(i).getName() + "%2C");
             }
         }
@@ -57,7 +56,7 @@ public class RecipeAPI {
             int response = conn.getResponseCode();
 
             if (response >= 400) {
-                Toast.makeText(context,"Somthing bad happened",Toast.LENGTH_LONG).show();
+                Toast.makeText(context,"Something bad happened",Toast.LENGTH_LONG).show();
             }
             else {
                 BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
@@ -70,6 +69,45 @@ public class RecipeAPI {
 
                 searchResult = new JSONArray(sb.toString());
             }
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void getRecipe (String id) {
+
+        try {
+
+        String urlString = "https://webknox-recipes.p.mashape.com/recipes/"+ id +"/information";
+            URL fullurl = new URL(urlString);
+            HttpURLConnection conn = (HttpURLConnection) fullurl.openConnection();
+            conn.setRequestProperty("X-Mashape-Key", keyString);
+            conn.setRequestProperty("Accept", "application/json");
+
+            conn.connect();
+
+            int response = conn.getResponseCode();
+
+            if (response >= 400) {
+                Toast.makeText(context,"Something bad happened",Toast.LENGTH_LONG).show();
+            }
+            else {
+                BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                StringBuilder sb = new StringBuilder();
+                String line;
+                while ((line = br.readLine()) != null) {
+                    sb.append(line + "\n");
+                }
+                br.close();
+
+                choosenRecipe = new JSONArray(sb.toString());
+            }
+
 
         } catch (MalformedURLException e) {
             e.printStackTrace();
