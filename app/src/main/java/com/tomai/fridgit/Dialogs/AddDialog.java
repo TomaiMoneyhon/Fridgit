@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.tomai.fridgit.Adapters.SuggestionAdapter;
+import com.tomai.fridgit.Interfaces.DialogListener;
 import com.tomai.fridgit.Item;
 import com.tomai.fridgit.R;
 
@@ -22,17 +23,13 @@ import com.tomai.fridgit.R;
  */
 public class AddDialog extends DialogFragment {
 
-    public interface OnAddDialogListener {
-        void OnAddListener (Item item);
-    }
-
-    OnAddDialogListener dialogListener;
+    private DialogListener dialogListener;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        dialogListener = (OnAddDialogListener)activity;
+        dialogListener = (DialogListener)activity;
     }
 
 

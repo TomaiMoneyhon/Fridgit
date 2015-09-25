@@ -40,7 +40,7 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:text="E"
-        android:id="@+id/edit_btn_item"/>
+        android:id="@+id/edit_shopping_btn_item"/>
 
     </LinearLayout>
 

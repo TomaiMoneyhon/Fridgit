@@ -99,7 +99,6 @@ public class RecipePreviewItemFragment extends Fragment {
                         public void run() {
                             try {
                                 mCallback.getID(oneRecipe.getInt("id"));
-                               // recipeID = oneRecipe.getInt("id");
                                 title.setText(oneRecipe.getString("title"));
                                 outof = oneRecipe.getInt("usedIngredientCount") + "/" + oneRecipe.getInt("missedIngredientCount");
                                 missingAmount.setText(outof);

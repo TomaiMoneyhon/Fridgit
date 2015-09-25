@@ -12,7 +12,8 @@ import com.tomai.fridgit.Fragments.RecipePreviewItemFragment;
  * Created by admin on 9/17/15.
  */
 public class RecipesPreviewActivity extends Activity implements RecipePreviewItemFragment.ChosenRecipeListener {
-    int iDDD;
+    int recipeID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,7 +26,7 @@ public class RecipesPreviewActivity extends Activity implements RecipePreviewIte
         yesBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onRecipeClickedListener(iDDD);
+                onRecipeClickedListener(recipeID);
 
             }
         });
@@ -34,7 +35,7 @@ public class RecipesPreviewActivity extends Activity implements RecipePreviewIte
         recipePreviewItemFragment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onRecipeClickedListener(iDDD);
+                onRecipeClickedListener(recipeID);
             }
         });
 
@@ -55,6 +56,6 @@ public class RecipesPreviewActivity extends Activity implements RecipePreviewIte
 
     @Override
     public void getID(final int id) {
-        iDDD = id;
+        recipeID = id;
     }
 }

@@ -1,15 +1,18 @@
 package com.tomai.fridgit.Adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
+import com.tomai.fridgit.Dialogs.EditDialog;
 import com.tomai.fridgit.Item;
 import com.tomai.fridgit.MainActivity;
 import com.tomai.fridgit.R;
@@ -21,12 +24,14 @@ import java.util.ArrayList;
  * Created by admin on 9/7/15.
  */
 public class ShoppingListAdapter extends ArrayAdapter<Item> {
-    Item oneItem;
-
-    Handler handler = new Handler();
+    public static final String SHOPPINGLISTKEY = "shopping";
+    private Item oneItem;
+    private Handler handler = new Handler();
+    private Activity activity;
 
     public ShoppingListAdapter(Context context, ArrayList<Item> items) {
         super(context, R.layout.shopping_list_adapter, items);
+        activity = (Activity)context;
     }
 
     @Override
@@ -41,7 +46,6 @@ public class ShoppingListAdapter extends ArrayAdapter<Item> {
 
         nameItem.setText(oneItem.getName());
         amountItem.setText(oneItem.getAmount() + " " + oneItem.getAmountKind());
-
 
         final CheckBox checkBox = (CheckBox)customView.findViewById(R.id.checkbox_item);
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -61,7 +65,6 @@ public class ShoppingListAdapter extends ArrayAdapter<Item> {
                             handler.post(new Runnable() {
                                 @Override
                                 public void run() {
-
                                     customView.setVisibility(View.GONE);
                                 }
                             });
@@ -71,6 +74,15 @@ public class ShoppingListAdapter extends ArrayAdapter<Item> {
                     }.start();
 
                 }
+            }
+        });
+
+        Button editshoppingBTN = (Button)customView.findViewById(R.id.edit_shopping_btn_item);
+        editshoppingBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditDialog editDialog = EditDialog.newEditDialog(position,SHOPPINGLISTKEY);
+                editDialog.show(activity.getFragmentManager(),"editDialog");
             }
         });
 

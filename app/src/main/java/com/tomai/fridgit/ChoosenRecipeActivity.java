@@ -1,17 +1,18 @@
 package com.tomai.fridgit;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 
 import com.tomai.fridgit.Adapters.RecipeTabAdapter;
-import com.tomai.fridgit.Adapters.TabAdapter;
 
 /**
  * Created by admin on 9/22/15.
  */
 public class ChoosenRecipeActivity extends ActionBarActivity {
     android.support.v7.app.ActionBar actionBar;
+    public static int recipeID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +21,10 @@ public class ChoosenRecipeActivity extends ActionBarActivity {
 
         final ViewPager pager = (ViewPager)findViewById(R.id.pager_recipe);
         final RecipeTabAdapter recipeTabAdapter = new RecipeTabAdapter(getSupportFragmentManager());
+
+        Intent intent = getIntent();
+
+        recipeID = intent.getIntExtra("id",0);
 
         pager.setAdapter(recipeTabAdapter);
 

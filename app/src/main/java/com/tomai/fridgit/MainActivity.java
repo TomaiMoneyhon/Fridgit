@@ -1,6 +1,5 @@
 package com.tomai.fridgit;
 
-import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -11,8 +10,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.tomai.fridgit.Adapters.FridgeListAdapter;
+import com.tomai.fridgit.Adapters.ShoppingListAdapter;
 import com.tomai.fridgit.Adapters.TabAdapter;
 import com.tomai.fridgit.Dialogs.AddDialog;
+import com.tomai.fridgit.Interfaces.DialogListener;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -23,15 +25,16 @@ import java.io.ObjectOutputStream;
 import java.io.StreamCorruptedException;
 import java.util.ArrayList;
 
-public class MainActivity extends ActionBarActivity implements AddDialog.OnAddDialogListener {
-    android.support.v7.app.ActionBar actionBar;
+public class MainActivity extends ActionBarActivity implements DialogListener {
+    private android.support.v7.app.ActionBar actionBar;
 
-    String SHOPPINGLIST_FILENAME = "shoppingList.dat";
-    String FRIDGELIST_FILENAME = "fridgeList.dat";
+    private final String SHOPPINGLIST_FILENAME = "shoppingList.dat";
+    private final String FRIDGELIST_FILENAME = "fridgeList.dat";
 
     public static ArrayList<Item> fridgeItems;
     public static ArrayList<Item> shoppingItems;
 
+    private ViewPager pager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +74,7 @@ public class MainActivity extends ActionBarActivity implements AddDialog.OnAddDi
         if(shoppingItems == null) shoppingItems = new ArrayList<>();
         if(fridgeItems == null) fridgeItems = new ArrayList<>();
 
-        final ViewPager pager = (ViewPager)findViewById(R.id.pager);
+        pager = (ViewPager)findViewById(R.id.pager);
         final TabAdapter tabAdapter = new TabAdapter(getSupportFragmentManager());
 
         pager.setAdapter(tabAdapter);
@@ -127,7 +130,7 @@ public class MainActivity extends ActionBarActivity implements AddDialog.OnAddDi
         floatingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFragment addIngredient = new AddDialog();
+                AddDialog addIngredient = new AddDialog();
                 addIngredient.show(getFragmentManager(),"addDialog");
 
             }
@@ -238,5 +241,35 @@ public class MainActivity extends ActionBarActivity implements AddDialog.OnAddDi
     @Override
     public void OnAddListener(Item item) {
         shoppingItems.add(item);
+    }
+
+    @Override
+    public void OnEditListener(Item original, Item afterEdit,String fromList) {
+        switch (fromList) {
+            case ShoppingListAdapter.SHOPPINGLISTKEY:
+                shoppingItems.remove(original);
+                shoppingItems.add(afterEdit);
+                pager.getAdapter().notifyDataSetChanged();
+                break;
+            case FridgeListAdapter.FRIDGELISTKEY:
+                fridgeItems.remove(original);
+                fridgeItems.add(afterEdit);
+                pager.getAdapter().notifyDataSetChanged();
+                break;
+        }
+    }
+
+    @Override
+    public void OnDeleteListener(Item item, String fromList) {
+        switch (fromList) {
+            case ShoppingListAdapter.SHOPPINGLISTKEY:
+                shoppingItems.remove(item);
+                pager.getAdapter().notifyDataSetChanged();
+                break;
+            case FridgeListAdapter.FRIDGELISTKEY:
+                fridgeItems.remove(item);
+                pager.getAdapter().notifyDataSetChanged();
+                break;
+        }
     }
 }

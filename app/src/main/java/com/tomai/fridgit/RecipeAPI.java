@@ -5,6 +5,7 @@ import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,7 +23,6 @@ public class RecipeAPI {
     private String keyString = "R4137EnBxzmshDqnV5fU7gnjxSjqp1EjeTPjsnaWFdR2Gxmn29";
     private static JSONArray searchResult;
     private Context context;
-    private static JSONArray choosenRecipe;
 
 
     public RecipeAPI(Context context) {
@@ -79,10 +79,9 @@ public class RecipeAPI {
         }
     }
 
-    public void getRecipe (String id) {
-
+    public JSONObject getRecipe (String id) {
+        JSONObject recipe = null;
         try {
-
         String urlString = "https://webknox-recipes.p.mashape.com/recipes/"+ id +"/information";
             URL fullurl = new URL(urlString);
             HttpURLConnection conn = (HttpURLConnection) fullurl.openConnection();
@@ -105,7 +104,7 @@ public class RecipeAPI {
                 }
                 br.close();
 
-                choosenRecipe = new JSONArray(sb.toString());
+                 recipe = new JSONObject(sb.toString());
             }
 
 
@@ -116,6 +115,7 @@ public class RecipeAPI {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        return recipe;
     }
 
 

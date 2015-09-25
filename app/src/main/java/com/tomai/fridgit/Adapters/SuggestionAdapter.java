@@ -12,8 +12,10 @@ import java.util.ArrayList;
  * Created by admin on 9/12/15.
  */
 public class SuggestionAdapter extends ArrayAdapter<String> {
+
     protected static final String TAG = "SuggestionAdapter";
     private ArrayList<String> suggestions;
+
     public SuggestionAdapter(Activity context, String nameFilter) {
         super(context, android.R.layout.simple_dropdown_item_1line);
         suggestions = new ArrayList<>();
