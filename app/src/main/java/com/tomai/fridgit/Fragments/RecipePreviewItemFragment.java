@@ -34,14 +34,26 @@ import java.net.URL;
  */
 public class RecipePreviewItemFragment extends Fragment {
 
+    RecipeAPI searchAPi = new RecipeAPI(getActivity());
+
+    static public int recipeCount;
+
+    Drawable drawable;
+    String outof;
+
+    TextView title;
+    TextView missingAmount;
+    ImageView thumbnail;
+    ProgressBar progressBar;
+    RelativeLayout mainLayout;
+    TextView nothingInFridge;
+
      public interface ChosenRecipeListener {
          void getID(int id);
+         void getCount (int count);
     }
 
     ChosenRecipeListener mCallback;
-
-    static public int recipeCount;
-    private int recipeID;
 
     @Override
     public void onAttach(Activity activity) {
@@ -59,13 +71,13 @@ public class RecipePreviewItemFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View recipeView = inflater.inflate(R.layout.recipe_preview_item_fragment, container, false);
 
-        final TextView title = (TextView)recipeView.findViewById(R.id.recipe_title);
-        final TextView missingAmount = (TextView)recipeView.findViewById(R.id.recipe_missing_ingredients);
-        final ImageView thumbnail = (ImageView)recipeView.findViewById(R.id.recipe_img);
-        final ProgressBar progressBar = (ProgressBar)recipeView.findViewById(R.id.progressBar);
-        final RelativeLayout mainLayout = (RelativeLayout)recipeView.findViewById(R.id.recipe_layout);
+        title = (TextView)recipeView.findViewById(R.id.recipe_title);
+        missingAmount = (TextView)recipeView.findViewById(R.id.recipe_missing_ingredients);
+        thumbnail = (ImageView)recipeView.findViewById(R.id.recipe_img);
+        progressBar = (ProgressBar)recipeView.findViewById(R.id.progressBar);
+        mainLayout = (RelativeLayout)recipeView.findViewById(R.id.recipe_layout);
+        nothingInFridge = (TextView) recipeView.findViewById(R.id.nothing_in_fridge);
 
-        final RecipeAPI searchAPi = new RecipeAPI(getActivity());
         final Handler handler = new Handler();
 
         ConnectivityManager connMgr = (ConnectivityManager)
@@ -73,9 +85,7 @@ public class RecipePreviewItemFragment extends Fragment {
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
             new Thread() {
-                String outof;
-                JSONObject oneRecipe;
-                Drawable drawable;
+                JSONObject currentRecipe;
                 @Override
                 public void run() {
                     super.run();
@@ -85,33 +95,59 @@ public class RecipePreviewItemFragment extends Fragment {
                             progressBar.setVisibility(View.VISIBLE);
                         }
                     });
-                    searchAPi.Search(MainActivity.fridgeItems);
-                    try {
-                       oneRecipe = searchAPi.getSearchResult().getJSONObject(0);
-                        drawable = getthumbnail(oneRecipe.getString("image"));
-
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                mCallback.getID(oneRecipe.getInt("id"));
-                                title.setText(oneRecipe.getString("title"));
-                                outof = oneRecipe.getInt("usedIngredientCount") + "/" + oneRecipe.getInt("missedIngredientCount");
-                                missingAmount.setText(outof);
-                                //TODO Chosse either to set image as background or as a imageView.
-                                //thumbnail.setImageDrawable(getthumbnail(oneRecipe.getString("image"))); //IMAGEVIEW
-                                mainLayout.setBackground(drawable); //BACKGROUND
+                    if (MainActivity.fridgeItems.size() == 0){
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                nothingInFridge.setVisibility(View.VISIBLE);
                                 progressBar.setVisibility(View.GONE);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
                             }
-                        }
-                    });
+                        });
+                    }
 
+                    else {
+                        searchAPi.Search(MainActivity.fridgeItems);
+                        try {
+//                            for (int i = 0 ; searchAPi.getSearchResult().length()-1 > i ; i++) {
+//                                int firstnum = searchAPi.getSearchResult().getJSONObject(i).getInt("missedIngredientCount");
+//                                for (int y = 0 ; searchAPi.getSearchResult().length()-1 > y ; y++) {
+//                                    int secondnumb = searchAPi.getSearchResult().getJSONObject(y).getInt("missedIngredientCount");
+//                                    if(firstnum <= secondnumb) {
+//                                        currentRecipe = searchAPi.getSearchResult().getJSONObject(i);
+//                                        mCallback.getCount(i);
+//                                        recipeCount = i;
+//                                    }
+//                                    else {
+//                                        currentRecipe = searchAPi.getSearchResult().getJSONObject(y);
+//                                        mCallback.getCount(y);
+//                                        recipeCount = y;
+//                                    }
+//                                }
+//                            }
+                            currentRecipe = searchAPi.getSearchResult().getJSONObject(0);
+                            drawable = getthumbnail(currentRecipe.getString("image"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    nothingInFridge.setVisibility(View.GONE);
+                                    mCallback.getID(currentRecipe.getInt("id"));
+                                    title.setText(currentRecipe.getString("title"));
+                                    outof = currentRecipe.getInt("usedIngredientCount") + "/" + currentRecipe.getInt("missedIngredientCount");
+                                    missingAmount.setText(outof);
+                                    //TODO Chosse either to set image as background or as a imageView.
+                                    //thumbnail.setImageDrawable(getthumbnail(oneRecipe.getString("image"))); //IMAGEVIEW
+                                    mainLayout.setBackground(drawable); //BACKGROUND
+                                    progressBar.setVisibility(View.GONE);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                    }
                 }
             }.start();
         } else {
@@ -119,15 +155,72 @@ public class RecipePreviewItemFragment extends Fragment {
         }
         return recipeView;
     }
+
+
     public Drawable getthumbnail (final String url) {
-        final InputStream[] is = {null};
-                try {
-                        is[0] = (InputStream) new URL(url).getContent();
-                    }
-                catch (IOException e) {
+         InputStream[] is = {null};
+        try {
+            is[0] = (InputStream) new URL(url).getContent();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        Drawable d = Drawable.createFromStream(is[0], "src name");
+        return d;
+    }
+
+    public void nextRecipe (int currentItemCount) {
+        final JSONObject nextRecipe;
+//TODO check about a issue with images not changing.
+        try {
+        if (searchAPi.getSearchResult().length()-1 == currentItemCount) {
+            recipeCount = 0;
+            nextRecipe = searchAPi.getSearchResult().getJSONObject(recipeCount);
+            new Thread() {
+                @Override
+                public void run() {
+                    super.run();
+                    try {
+                        drawable = getthumbnail(nextRecipe.getString("image"));
+                    } catch (JSONException e) {
                         e.printStackTrace();
                     }
-            Drawable d = Drawable.createFromStream(is[0], "src name");
-            return d;
+                }
+            }.start();
+            mCallback.getID(nextRecipe.getInt("id"));
+            mCallback.getCount(recipeCount);
+            title.setText(nextRecipe.getString("title"));
+            outof = nextRecipe.getInt("usedIngredientCount") + "/" + nextRecipe.getInt("missedIngredientCount");
+            missingAmount.setText(outof);
+            //TODO Chosse either to set image as background or as a imageView.
+            //thumbnail.setImageDrawable(getthumbnail(oneRecipe.getString("image"))); //IMAGEVIEW
+            mainLayout.setBackground(drawable); //BACKGROUND
+        }
+            else {
+            recipeCount = currentItemCount + 1;
+            nextRecipe = searchAPi.getSearchResult().getJSONObject(recipeCount);
+            new Thread() {
+                @Override
+                public void run() {
+                    super.run();
+                    try {
+                        drawable = getthumbnail(nextRecipe.getString("image"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }.start();
+            mCallback.getID(nextRecipe.getInt("id"));
+            mCallback.getCount(recipeCount);
+            title.setText(nextRecipe.getString("title"));
+            outof = nextRecipe.getInt("usedIngredientCount") + "/" + nextRecipe.getInt("missedIngredientCount");
+            missingAmount.setText(outof);
+            //TODO Chosse either to set image as background or as a imageView.
+            //thumbnail.setImageDrawable(getthumbnail(oneRecipe.getString("image"))); //IMAGEVIEW
+            mainLayout.setBackground(drawable); //BACKGROUND
+        }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }

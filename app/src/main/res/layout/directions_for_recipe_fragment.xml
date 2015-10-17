@@ -5,10 +5,13 @@
               android:layout_height="match_parent">
 <WebView
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" android:layout_weight="29"></WebView>
+    android:layout_height="wrap_content"
+    android:layout_weight="29"
+    android:id="@+id/webView"></WebView>
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Finnished cooking"/>
+        android:text="Finnished cooking"
+        android:id="@+id/finnished_cooking_btn"/>
 </LinearLayout>

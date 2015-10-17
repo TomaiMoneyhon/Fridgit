@@ -7,13 +7,16 @@ import android.support.v7.app.ActionBarActivity;
 
 import com.tomai.fridgit.Adapters.RecipeTabAdapter;
 
+import java.util.ArrayList;
+
 /**
  * Created by admin on 9/22/15.
  */
 public class ChoosenRecipeActivity extends ActionBarActivity {
     android.support.v7.app.ActionBar actionBar;
     public static int recipeID;
-
+    public static ArrayList<Item> missingItems = new ArrayList<>();
+    public static boolean hasIngredients;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -4,20 +4,30 @@
                 android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
-
-    <fragment
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:name="com.tomai.fridgit.Fragments.RecipePreviewItemFragment"
-        android:id="@+id/fragment"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_above="@+id/linearLayout"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        tools:layout="@layout/recipe_preview_item_fragment"
-        android:layout_margin="40dp"/>
+<FrameLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentStart="true"
+    android:layout_above="@+id/linearLayout"
+    android:layout_alignParentRight="true"
+    android:layout_alignParentEnd="true"
+    android:layout_margin="40dp"
+    android:id="@+id/fragment_container"></FrameLayout>
+    <!--<fragment-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:name="com.tomai.fridgit.Fragments.RecipePreviewItemFragment"-->
+        <!--android:id="@+id/fragment"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--android:layout_alignParentStart="true"-->
+        <!--android:layout_above="@+id/linearLayout"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_alignParentEnd="true"-->
+        <!--tools:layout="@layout/recipe_preview_item_fragment"-->
+        <!--android:layout_margin="40dp"/>-->
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"

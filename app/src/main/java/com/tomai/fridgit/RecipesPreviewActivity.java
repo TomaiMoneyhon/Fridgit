@@ -1,10 +1,13 @@
 package com.tomai.fridgit;
 
 import android.app.Activity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 
 import com.tomai.fridgit.Fragments.RecipePreviewItemFragment;
 
@@ -12,7 +15,11 @@ import com.tomai.fridgit.Fragments.RecipePreviewItemFragment;
  * Created by admin on 9/17/15.
  */
 public class RecipesPreviewActivity extends Activity implements RecipePreviewItemFragment.ChosenRecipeListener {
-    int recipeID;
+    private int recipeID;
+    private int recipeCount;
+
+//    View recipePreviewItemFragment;
+    RecipePreviewItemFragment recipePreviewItemFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,18 +38,30 @@ public class RecipesPreviewActivity extends Activity implements RecipePreviewIte
             }
         });
 
-        View recipePreviewItemFragment = (View)findViewById(R.id.fragment);
-        recipePreviewItemFragment.setOnClickListener(new View.OnClickListener() {
+        FrameLayout fragmentContainer = (FrameLayout) findViewById(R.id.fragment_container);
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        recipePreviewItemFragment = new RecipePreviewItemFragment();
+        fragmentTransaction.add(R.id.fragment_container, recipePreviewItemFragment);
+        fragmentTransaction.commit();
+//        recipePreviewItemFragment = (View)findViewById(R.id.fragment);
+
+        fragmentContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onRecipeClickedListener(recipeID);
             }
         });
 
+
+
         noBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO Make "noBTN" changed the currently viewed recipe (use "recipeCount" variable from inside the "recipeFragment").
+//                RecipePreviewItemFragment previewFragment = (RecipePreviewItemFragment) getFragmentManager().findFragmentById(R.id.fragment);
+                recipePreviewItemFragment.nextRecipe(recipeCount);
+
             }
         });
 
@@ -57,5 +76,10 @@ public class RecipesPreviewActivity extends Activity implements RecipePreviewIte
     @Override
     public void getID(final int id) {
         recipeID = id;
+    }
+
+    @Override
+    public void getCount(int count) {
+        recipeCount = count;
     }
 }

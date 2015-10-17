@@ -72,7 +72,11 @@ public class EditDialog extends DialogFragment {
         nameInput.setText(itemForEdit.getName());
 
         final EditText amountInput = (EditText)view.findViewById(R.id.amount_input);
-        amountInput.setText(itemForEdit.getAmount() + "");
+
+        if (itemForEdit.getAmount() == -1) {
+            amountInput.setText("");
+        }
+        else amountInput.setText(itemForEdit.getAmount() + "");
 
         final Spinner dropDown = (Spinner)view.findViewById(R.id.drop_down);
         String[] amounts = new String[]{"Grams","Liters","Units"};

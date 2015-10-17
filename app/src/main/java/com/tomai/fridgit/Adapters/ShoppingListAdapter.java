@@ -12,6 +12,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
+import com.tomai.fridgit.Dialogs.AddAmountDialog;
 import com.tomai.fridgit.Dialogs.EditDialog;
 import com.tomai.fridgit.Item;
 import com.tomai.fridgit.MainActivity;
@@ -23,11 +24,13 @@ import java.util.ArrayList;
 /**
  * Created by admin on 9/7/15.
  */
-public class ShoppingListAdapter extends ArrayAdapter<Item> {
+public class ShoppingListAdapter extends ArrayAdapter<Item> implements AddAmountDialog.AddAmountDialogListener{
     public static final String SHOPPINGLISTKEY = "shopping";
     private Item oneItem;
     private Handler handler = new Handler();
     private Activity activity;
+    private Item checkedItem;
+    private CheckBox checkBox;
 
     public ShoppingListAdapter(Context context, ArrayList<Item> items) {
         super(context, R.layout.shopping_list_adapter, items);
@@ -45,34 +48,46 @@ public class ShoppingListAdapter extends ArrayAdapter<Item> {
         TextView amountItem = (TextView)customView.findViewById(R.id.amount_item);
 
         nameItem.setText(oneItem.getName());
-        amountItem.setText(oneItem.getAmount() + " " + oneItem.getAmountKind());
 
-        final CheckBox checkBox = (CheckBox)customView.findViewById(R.id.checkbox_item);
+        if (oneItem.getAmount() == -1) {
+            amountItem.setVisibility(View.INVISIBLE);
+        }
+
+        else {
+            amountItem.setVisibility(View.VISIBLE);
+            amountItem.setText(oneItem.getAmount() + " " + oneItem.getAmountKind());
+        }
+
+        checkBox = (CheckBox)customView.findViewById(R.id.checkbox_item);
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                checkBox.setChecked(true);
-               final Item checkedItem = MainActivity.shoppingItems.get(position);
+                checkedItem = MainActivity.shoppingItems.get(position);
                 if (isChecked) {
-                    new Thread() {
-                        @Override
-                        public void run() {
-                            try {
-                                sleep(500, 0);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            handler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    customView.setVisibility(View.GONE);
+                    if (checkedItem.getAmount() == -1) {
+                        AddAmountDialog addAmountDialog = AddAmountDialog.newAddAmountDialog(position);
+                        AddAmountDialog.setListener(ShoppingListAdapter.this);
+                        addAmountDialog.show(activity.getFragmentManager(), "addAmountDialog");
+                    } else {
+                        new Thread() {
+                            @Override
+                            public void run() {
+                                try {
+                                    sleep(500, 0);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
                                 }
-                            });
-                            MainActivity.shoppingItems.remove(checkedItem);
-                            MainActivity.fridgeItems.add(checkedItem);
-                        }
-                    }.start();
-
+                                handler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        customView.setVisibility(View.GONE);
+                                    }
+                                });
+                                MainActivity.shoppingItems.remove(checkedItem);
+                                MainActivity.fridgeItems.add(checkedItem);
+                            }
+                        }.start();
+                    }
                 }
             }
         });
@@ -88,5 +103,12 @@ public class ShoppingListAdapter extends ArrayAdapter<Item> {
 
         return customView;
 
+    }
+
+    public void changeCheckedState () {
+       if(checkedItem.getAmount() == -1) {
+           checkBox.setChecked(false);
+           this.notifyDataSetChanged();
+       }
     }
 }
