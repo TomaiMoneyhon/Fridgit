@@ -239,9 +239,7 @@ public class MainActivity extends ActionBarActivity implements DialogListener {
     }
 
     @Override
-    public void OnAddListener(Item item) {
-        shoppingItems.add(item);
-    }
+    public void OnAddListener(Item item) {shoppingItems.add(item);}
 
     @Override
     public void OnEditListener(Item original, Item afterEdit,String fromList) {
@@ -271,5 +269,11 @@ public class MainActivity extends ActionBarActivity implements DialogListener {
                 pager.getAdapter().notifyDataSetChanged();
                 break;
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        pager.getAdapter().notifyDataSetChanged();
     }
 }

@@ -28,6 +28,8 @@ public class EditDialog extends DialogFragment {
 
     private DialogListener dialogListener;
     private String fromList;
+    private boolean alreadyHasIgredient = false;
+    private Item itemForEdit;
 
     public static EditDialog newEditDialog(int position, String list) {
         EditDialog editDialog = new EditDialog();
@@ -57,7 +59,7 @@ public class EditDialog extends DialogFragment {
 
         int itemPosition = getArguments().getInt("position");
         fromList = getArguments().getString("list");
-        Item itemForEdit = null;
+        itemForEdit = null;
         switch (fromList) {
             case ShoppingListAdapter.SHOPPINGLISTKEY:
                 itemForEdit = MainActivity.shoppingItems.get(itemPosition);
@@ -96,11 +98,10 @@ public class EditDialog extends DialogFragment {
         }
 
         Button addButton = (Button) view.findViewById(R.id.add_ingredient_btn);
-        final Item finalItemForEdit = itemForEdit;
+
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 String name = nameInput.getText().toString();
                 Item.amounts amountkind = null;
                 switch (dropDown.getSelectedItem().toString()) {
@@ -123,8 +124,32 @@ public class EditDialog extends DialogFragment {
                 } else {
                     int amount = Integer.parseInt(amountInput.getText().toString());
                     Item editedItem = new Item(name, amount, amountkind);
-                    dialogListener.OnEditListener(finalItemForEdit, editedItem,fromList);
-                    getDialog().dismiss();
+                    switch (fromList){
+                        case ShoppingListAdapter.SHOPPINGLISTKEY:
+                            for(int i = 0; MainActivity.shoppingItems.size() > i ; i++){
+                                if(MainActivity.shoppingItems.get(i).getName().equals(editedItem.getName())){
+                                    alreadyHasIgredient = true;
+                                }
+                            }
+                            break;
+                        case FridgeListAdapter.FRIDGELISTKEY:
+                            for(int i = 0; MainActivity.fridgeItems.size() > i ; i++){
+                                if(MainActivity.fridgeItems.get(i).getName().equals(editedItem.getName())){
+                                    alreadyHasIgredient = true;
+                                }
+                            }
+                            break;
+                    }
+
+                    if(alreadyHasIgredient){
+                        nameInput.setError("You already have this ingredient in the list");
+                        nameInput.getError();
+                    }
+                    else {
+                        dialogListener.OnEditListener(itemForEdit, editedItem, fromList);
+                        getDialog().dismiss();
+                    }
+
                 }
             }
         });

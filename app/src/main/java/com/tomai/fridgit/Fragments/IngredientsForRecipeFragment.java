@@ -87,15 +87,16 @@ public class IngredientsForRecipeFragment extends Fragment {
         Button addToShoppingListBTN = (Button)listFragment.findViewById(R.id.add_to_shopping_list_btn);
         addToShoppingListBTN.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {addMissingIngredients(getContext());
 
+                ///USING CONVERTERS!!
 //                new Thread() {
 //
 //                    @Override
 //                    public void run() {
 //                        super.run();
 //                        Converters converters = new Converters(getContext());
-//                        final String result = converters.coockingUnitConverter(15,"tablespoonUS","liter", Converters.ConverterKind.CookingUnits);
+//                        final String result = converters.cookingUnitConverter(15,"tablespoonUS","liter", Converters.ConverterKind.CookingUnits);
 //
 //                        handler.post(new Runnable() {
 //                            @Override
@@ -107,15 +108,23 @@ public class IngredientsForRecipeFragment extends Fragment {
 //
 //                    }
 //                }.start();
-
-                //TODO Add all missing ingredients to shopping list.
             }
         });
-//        ShoppingListAdapter todoAdapter = new ShoppingListAdapter(getContext(), MainActivity.shoppingItems);
-//
-//        final ListView listView = (ListView)listFragment.findViewById(R.id.listView);
-//        listView.setAdapter(todoAdapter);
-
         return listFragment;
+    }
+    public static void addMissingIngredients (Context context){
+        for(int i = 0; ChoosenRecipeActivity.missingItems.size() > i ; i++){
+            boolean hasIngredient = false;
+            for(int y = 0; MainActivity.shoppingItems.size()>y; y++){
+                if(MainActivity.shoppingItems.get(y).getName().equals(ChoosenRecipeActivity.missingItems.get(i).getName())) {
+                    hasIngredient = true;
+                }
+            }
+            if(!hasIngredient) {
+                MainActivity.shoppingItems.add(ChoosenRecipeActivity.missingItems.get(i));
+            }
+        }
+        ChoosenRecipeActivity.missingItems.clear();
+        Toast.makeText(context,"Missing ingredients have been added to your shopping list",Toast.LENGTH_LONG).show();
     }
 }

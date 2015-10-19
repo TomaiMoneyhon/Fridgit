@@ -16,6 +16,7 @@ import android.widget.Spinner;
 import com.tomai.fridgit.Adapters.SuggestionAdapter;
 import com.tomai.fridgit.Interfaces.DialogListener;
 import com.tomai.fridgit.Item;
+import com.tomai.fridgit.MainActivity;
 import com.tomai.fridgit.R;
 
 /**
@@ -24,11 +25,17 @@ import com.tomai.fridgit.R;
 public class AddDialog extends DialogFragment {
 
     private DialogListener dialogListener;
+    private boolean alreadyHasIngredient = false;
+    private Activity activity;
+
+    private EditText amountinput;
+    private AutoCompleteTextView autoCompleteInput;
+    private Spinner dropDown;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-
+        this.activity = activity;
         dialogListener = (DialogListener)activity;
     }
 
@@ -41,12 +48,12 @@ public class AddDialog extends DialogFragment {
         View view = inflater.inflate(R.layout.add_dialog,null);
         builder.setView(view);
 
-        final EditText amountinput = (EditText)view.findViewById(R.id.amount_input);
+        amountinput = (EditText)view.findViewById(R.id.amount_input);
 
-        final AutoCompleteTextView autoCompleteInput = (AutoCompleteTextView) view.findViewById(R.id.autocomplete_input);
+        autoCompleteInput = (AutoCompleteTextView) view.findViewById(R.id.autocomplete_input);
         autoCompleteInput.setAdapter(new SuggestionAdapter(getActivity(), autoCompleteInput.getText().toString()));
 
-        final Spinner dropDown = (Spinner)view.findViewById(R.id.drop_down);
+        dropDown = (Spinner)view.findViewById(R.id.drop_down);
         String[] amounts = new String[]{"Grams","Liters","Units"};
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item,amounts);
         dropDown.setAdapter(adapter);
@@ -74,20 +81,32 @@ public class AddDialog extends DialogFragment {
                     autoCompleteInput.getError();
                 }
                 else if (amountinput.getText().toString().equals("")) {
-                    /*amountinput.setError("No amount found");
-                    amountinput.getError();*/
                     Item createdItem = new Item(name, amountkind);
-                    dialogListener.OnAddListener(createdItem);
-                    getDialog().dismiss();
+                    checkCreatedItem(createdItem);
                 }
                 else {
                     int amount = Integer.parseInt(amountinput.getText().toString());
                     Item createdItem = new Item(name, amount, amountkind);
-                    dialogListener.OnAddListener(createdItem);
-                    getDialog().dismiss();
+                    checkCreatedItem(createdItem);
                 }
             }
         });
         return builder.create();
+    }
+
+    public void checkCreatedItem (Item createdItem) {
+        for(int i = 0; MainActivity.shoppingItems.size() > i ; i++){
+            if(MainActivity.shoppingItems.get(i).getName().equals(createdItem.getName())){
+                alreadyHasIngredient = true;
+            }
+        }
+        if(alreadyHasIngredient){
+            autoCompleteInput.setError("You already have this in your fridge");
+            autoCompleteInput.getError();
+        }
+        else {
+            dialogListener.OnAddListener(createdItem);
+            getDialog().dismiss();
+        }
     }
 }

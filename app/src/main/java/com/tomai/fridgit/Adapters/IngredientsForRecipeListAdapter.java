@@ -9,7 +9,6 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.tomai.fridgit.ChoosenRecipeActivity;
-import com.tomai.fridgit.Converters;
 import com.tomai.fridgit.Item;
 import com.tomai.fridgit.MainActivity;
 import com.tomai.fridgit.R;
@@ -23,6 +22,8 @@ import java.util.ArrayList;
  * Created by admin on 9/23/15.
  */
 public class IngredientsForRecipeListAdapter extends ArrayAdapter<JSONObject> {
+
+    private boolean available = false;
 
     public IngredientsForRecipeListAdapter(Context context, ArrayList<JSONObject> resource) {
         super(context, R.layout.ingredients_for_recipe_list_adapter ,resource);
@@ -54,12 +55,15 @@ public class IngredientsForRecipeListAdapter extends ArrayAdapter<JSONObject> {
             //TODO Decide were the color should be represented. in the background or on the text (For example) ?
             if (MainActivity.fridgeItems.get(i).getName().equals(nameIngredient)) {
                 nameItem.setTextColor(Color.GREEN);
-                ChoosenRecipeActivity.hasIngredients = false;
-                //TODO amount converter
-//                Item missingItem = new Item(nameIngredient,amount,amountKind);
-//                ChoosenRecipeActivity.missingItems.add(missingItem);
+                available = true;
             }
         }
+        if(!available){
+            Item missingIngredient = new Item (nameIngredient, Item.amounts.Units);
+            ChoosenRecipeActivity.missingItems.add(missingIngredient);
+            ChoosenRecipeActivity.hasIngredients = false;
+        }else available = false;
+
             nameItem.setText(nameIngredient);
             amountItem.setText( amount + " " + amountKind);
 

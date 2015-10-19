@@ -32,7 +32,7 @@ public class Converters {
         this.context = context;
     }
 
-    public String coockingUnitConverter (int amount, String original, String convertTo, ConverterKind converterKind) {
+    public String cookingUnitConverter (int amount, String original, String convertTo, ConverterKind converterKind) {
         String convertURL = "";
         Document doc = null;
         URL fullurl = null;

@@ -35,11 +35,13 @@ public class RecipeAPI {
 
     public void Search (ArrayList<Item> ingredients) {
         String recipeList = "";
-
         for (int i = 0 ; i < ingredients.size(); i++) {
-            if (ingredients.size() == i + 1) recipeList = recipeList + ingredients.get(i).getName();
+            String ingredientI = ingredients.get(i).getName().replaceAll(" ","+").toLowerCase();
+            if (ingredients.size() == i + 1) {
+                recipeList = recipeList + ingredientI;
+            }
             else {
-                recipeList = recipeList + (ingredients.get(i).getName() + "%2C");
+                recipeList = recipeList + ingredientI + "%2C";
             }
         }
 

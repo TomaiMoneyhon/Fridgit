@@ -8,7 +8,7 @@
         android:layout_height="wrap_content"
         android:text="Add ingredient"
         android:layout_gravity="center"
-        android:textSize="25sp"
+        android:textSize="@dimen/dialog_title_textSize"
         android:layout_marginTop="20dp"/>
 
     <AutoCompleteTextView

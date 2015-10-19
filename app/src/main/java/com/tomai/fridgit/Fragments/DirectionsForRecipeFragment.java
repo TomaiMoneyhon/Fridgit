@@ -12,6 +12,7 @@ import android.webkit.WebView;
 import android.widget.Button;
 
 import com.tomai.fridgit.ChoosenRecipeActivity;
+import com.tomai.fridgit.Dialogs.MissingIngredientsDialog;
 import com.tomai.fridgit.R;
 import com.tomai.fridgit.RecipeAPI;
 
@@ -52,11 +53,13 @@ public class DirectionsForRecipeFragment extends Fragment {
             }
         }.start();
 
-        Button finnshedCooking = (Button)listFragment.findViewById(R.id.finnished_cooking_btn);
-        finnshedCooking.setOnClickListener(new View.OnClickListener() {
+        Button finnishedCooking = (Button)listFragment.findViewById(R.id.finnished_cooking_btn);
+        finnishedCooking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!ChoosenRecipeActivity.hasIngredients){
+                    MissingIngredientsDialog missingIngredientsDialog = new MissingIngredientsDialog();
+                    missingIngredientsDialog.show(getActivity().getFragmentManager(),"missing dialog");
                     //TODO Create dialog saying "you don't have all ingredient" with three options "i actually do have them", "add them to shopping list" and exit
                 }
             }
