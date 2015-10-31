@@ -18,14 +18,12 @@ public class RecipesPreviewActivity extends Activity implements RecipePreviewIte
     private int recipeID;
     private int recipeCount;
 
-//    View recipePreviewItemFragment;
     RecipePreviewItemFragment recipePreviewItemFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recipes_preview_activity);
-
 
         Button noBTN = (Button)findViewById(R.id.no_recipe_btn);
 
@@ -45,7 +43,6 @@ public class RecipesPreviewActivity extends Activity implements RecipePreviewIte
         recipePreviewItemFragment = new RecipePreviewItemFragment();
         fragmentTransaction.add(R.id.fragment_container, recipePreviewItemFragment);
         fragmentTransaction.commit();
-//        recipePreviewItemFragment = (View)findViewById(R.id.fragment);
 
         fragmentContainer.setOnClickListener(new View.OnClickListener() {
             @Override

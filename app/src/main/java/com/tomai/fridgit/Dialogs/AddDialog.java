@@ -85,7 +85,7 @@ public class AddDialog extends DialogFragment {
                     checkCreatedItem(createdItem);
                 }
                 else {
-                    int amount = Integer.parseInt(amountinput.getText().toString());
+                    double amount = Double.parseDouble(amountinput.getText().toString());
                     Item createdItem = new Item(name, amount, amountkind);
                     checkCreatedItem(createdItem);
                 }

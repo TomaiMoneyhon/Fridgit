@@ -1,6 +1,8 @@
 package com.tomai.fridgit;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
@@ -101,6 +103,10 @@ public class MainActivity extends ActionBarActivity implements DialogListener {
 
         //TODO Check google play tab design. Is it worth it? (google play tab aren't deprecated).
         actionBar = getSupportActionBar();
+
+        //TODO find out how to show header_pic.jpg as background image fro action bar
+//        Drawable backgroundActionBar = getResources().getDrawable(R.drawable.header_pic);
+//        actionBar.setBackgroundDrawable(backgroundActionBar);
         if (actionBar != null) {
             actionBar.setNavigationMode(android.support.v7.app.ActionBar.NAVIGATION_MODE_TABS);
 

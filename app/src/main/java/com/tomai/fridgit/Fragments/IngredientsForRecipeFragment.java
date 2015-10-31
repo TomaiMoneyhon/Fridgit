@@ -17,7 +17,6 @@ import android.widget.Toast;
 
 import com.tomai.fridgit.Adapters.IngredientsForRecipeListAdapter;
 import com.tomai.fridgit.ChoosenRecipeActivity;
-import com.tomai.fridgit.Converters;
 import com.tomai.fridgit.MainActivity;
 import com.tomai.fridgit.R;
 import com.tomai.fridgit.RecipeAPI;
@@ -33,20 +32,25 @@ import java.util.ArrayList;
  */
 public class IngredientsForRecipeFragment extends Fragment {
     private JSONArray ingredientsjsonArray;
-    private ArrayList<JSONObject> ingredientsArrayList = new ArrayList<>();
+    public static ArrayList<JSONObject> ingredientsArrayList = new ArrayList<>();
     private JSONObject recipe;
-    Handler handler = new Handler();
+    private Handler handler = new Handler();
+
+    private IngredientsForRecipeListAdapter customAdapter;
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View listFragment = inflater.inflate(R.layout.ingredients_for_recipe_fragment, container, false);
         final ListView ingredientsList = (ListView)listFragment.findViewById(R.id.ingredients_for_recipe_list);
 
-        ConnectivityManager connMgr = (ConnectivityManager)
-                getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connMgr = (ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 
-        final IngredientsForRecipeListAdapter customAdapter = new IngredientsForRecipeListAdapter(getContext(),ingredientsArrayList);
+        ingredientsArrayList.clear();
+
+        customAdapter = new IngredientsForRecipeListAdapter(getContext(),ingredientsArrayList);
         ingredientsList.setAdapter(customAdapter);
         if (networkInfo != null && networkInfo.isConnected()) {
             new Thread() {

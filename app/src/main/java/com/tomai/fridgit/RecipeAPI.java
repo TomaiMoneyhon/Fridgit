@@ -24,7 +24,6 @@ public class RecipeAPI {
     private static JSONArray searchResult;
     private Context context;
 
-
     public RecipeAPI(Context context) {
         this.context = context;
     }

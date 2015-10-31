@@ -17,6 +17,8 @@ import com.tomai.fridgit.R;
  */
 public class ShoppingListFragment extends Fragment {
 
+    private ListView listView;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -24,7 +26,7 @@ public class ShoppingListFragment extends Fragment {
 
         ShoppingListAdapter todoAdapter = new ShoppingListAdapter(getContext(), MainActivity.shoppingItems);
 
-        final ListView listView = (ListView)listFragment.findViewById(R.id.listView);
+        listView = (ListView)listFragment.findViewById(R.id.listView);
         listView.setAdapter(todoAdapter);
 
         return listFragment;

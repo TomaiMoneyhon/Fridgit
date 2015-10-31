@@ -18,6 +18,7 @@ import com.tomai.fridgit.Item;
 import com.tomai.fridgit.MainActivity;
 import com.tomai.fridgit.R;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 
@@ -31,6 +32,7 @@ public class ShoppingListAdapter extends ArrayAdapter<Item> implements AddAmount
     private Activity activity;
     private Item checkedItem;
     private CheckBox checkBox;
+    private DecimalFormat decimalFormat = new DecimalFormat("#");
 
     public ShoppingListAdapter(Context context, ArrayList<Item> items) {
         super(context, R.layout.shopping_list_adapter, items);
@@ -55,7 +57,9 @@ public class ShoppingListAdapter extends ArrayAdapter<Item> implements AddAmount
 
         else {
             amountItem.setVisibility(View.VISIBLE);
-            amountItem.setText(oneItem.getAmount() + " " + oneItem.getAmountKind());
+            if(oneItem.getAmount() >= 1) amountItem.setText(decimalFormat.format(oneItem.getAmount()) + " " + oneItem.getAmountKind());
+            else amountItem.setText(oneItem.getAmount() + " " + oneItem.getAmountKind());
+
         }
 
         checkBox = (CheckBox)customView.findViewById(R.id.checkbox_item);

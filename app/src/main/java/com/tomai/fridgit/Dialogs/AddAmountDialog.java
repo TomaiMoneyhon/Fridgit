@@ -19,6 +19,7 @@ import com.tomai.fridgit.Item;
 import com.tomai.fridgit.MainActivity;
 import com.tomai.fridgit.R;
 
+
 /**
  * Created by admin on 9/12/15.
  */
@@ -83,7 +84,6 @@ public class AddAmountDialog extends DialogFragment {
             @Override
             public void onClick(View v) {
 
-                Item.amounts amountkind = null;
                  switch (dropDown.getSelectedItem().toString()) {
                      case "Grams":
                          itemForEdit.setAmountKind(Item.amounts.Grams);
@@ -101,7 +101,8 @@ public class AddAmountDialog extends DialogFragment {
                     amountinput.getError();
                 }
                 else {
-                    int amount = Integer.parseInt(amountinput.getText().toString());
+
+                    double amount = Double.parseDouble(amountinput.getText().toString());
                     itemForEdit.setAmount(amount);
                     MainActivity.shoppingItems.remove(itemForEdit);
                     MainActivity.fridgeItems.add(itemForEdit);

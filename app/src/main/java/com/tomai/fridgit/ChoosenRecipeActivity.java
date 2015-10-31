@@ -17,13 +17,17 @@ public class ChoosenRecipeActivity extends ActionBarActivity {
     public static int recipeID;
     public static ArrayList<Item> missingItems = new ArrayList<>();
     public static boolean hasIngredients;
+
+    private ViewPager pager;
+    private RecipeTabAdapter recipeTabAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.choosen_recipe_activity);
 
-        final ViewPager pager = (ViewPager)findViewById(R.id.pager_recipe);
-        final RecipeTabAdapter recipeTabAdapter = new RecipeTabAdapter(getSupportFragmentManager());
+        pager = (ViewPager)findViewById(R.id.pager_recipe);
+        recipeTabAdapter = new RecipeTabAdapter(getSupportFragmentManager());
 
         Intent intent = getIntent();
 

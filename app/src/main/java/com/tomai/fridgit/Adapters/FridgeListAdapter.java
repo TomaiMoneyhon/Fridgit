@@ -13,6 +13,7 @@ import com.tomai.fridgit.Dialogs.EditDialog;
 import com.tomai.fridgit.Item;
 import com.tomai.fridgit.R;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 
@@ -23,6 +24,9 @@ public class FridgeListAdapter extends ArrayAdapter<Item> {
     public static final String FRIDGELISTKEY = "fridge";
     private Activity activity;
     private Item oneItem;
+    private DecimalFormat decimalFormat = new DecimalFormat("#");
+
+    private View customView;
 
     public FridgeListAdapter(Context context, ArrayList<Item> items) {
         super(context, R.layout.fridge_list_adapter, items);
@@ -32,7 +36,7 @@ public class FridgeListAdapter extends ArrayAdapter<Item> {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(getContext());
-        final View customView = inflater.inflate(R.layout.fridge_list_adapter, parent, false);
+        customView = inflater.inflate(R.layout.fridge_list_adapter, parent, false);
 
         oneItem = getItem(position);
 
@@ -40,7 +44,9 @@ public class FridgeListAdapter extends ArrayAdapter<Item> {
         TextView amountItem = (TextView)customView.findViewById(R.id.amount_item);
 
         nameItem.setText(oneItem.getName());
-        amountItem.setText(oneItem.getAmount() + " " + oneItem.getAmountKind());
+        if(oneItem.getAmount() >= 1) amountItem.setText(decimalFormat.format(oneItem.getAmount()) + " " + oneItem.getAmountKind());
+        else amountItem.setText(oneItem.getAmount() + " " + oneItem.getAmountKind());
+
 
         Button editfridgeBTN = (Button)customView.findViewById(R.id.edit_fridge_btn_item);
         editfridgeBTN.setOnClickListener(new View.OnClickListener() {

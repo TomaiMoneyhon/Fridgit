@@ -31,6 +31,10 @@ public class EditDialog extends DialogFragment {
     private boolean alreadyHasIgredient = false;
     private Item itemForEdit;
 
+    private AutoCompleteTextView nameInput;
+    private EditText amountInput;
+    private Spinner dropDown;
+
     public static EditDialog newEditDialog(int position, String list) {
         EditDialog editDialog = new EditDialog();
 
@@ -69,18 +73,18 @@ public class EditDialog extends DialogFragment {
                 break;
         }
 
-        final AutoCompleteTextView nameInput = (AutoCompleteTextView)view.findViewById(R.id.autocomplete_input);
+        nameInput = (AutoCompleteTextView)view.findViewById(R.id.autocomplete_input);
         nameInput.setAdapter(new SuggestionAdapter(getActivity(), nameInput.getText().toString()));
         nameInput.setText(itemForEdit.getName());
 
-        final EditText amountInput = (EditText)view.findViewById(R.id.amount_input);
+        amountInput = (EditText)view.findViewById(R.id.amount_input);
 
         if (itemForEdit.getAmount() == -1) {
             amountInput.setText("");
         }
         else amountInput.setText(itemForEdit.getAmount() + "");
 
-        final Spinner dropDown = (Spinner)view.findViewById(R.id.drop_down);
+        dropDown = (Spinner)view.findViewById(R.id.drop_down);
         String[] amounts = new String[]{"Grams","Liters","Units"};
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item,amounts);
         dropDown.setAdapter(adapter);
@@ -98,7 +102,6 @@ public class EditDialog extends DialogFragment {
         }
 
         Button addButton = (Button) view.findViewById(R.id.add_ingredient_btn);
-
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -122,19 +125,25 @@ public class EditDialog extends DialogFragment {
                     amountInput.setError("No amount found");
                     amountInput.getError();
                 } else {
-                    int amount = Integer.parseInt(amountInput.getText().toString());
+                    double amount = Double.parseDouble(amountInput.getText().toString());
                     Item editedItem = new Item(name, amount, amountkind);
                     switch (fromList){
                         case ShoppingListAdapter.SHOPPINGLISTKEY:
                             for(int i = 0; MainActivity.shoppingItems.size() > i ; i++){
-                                if(MainActivity.shoppingItems.get(i).getName().equals(editedItem.getName())){
+                                if(MainActivity.shoppingItems.get(i).getName().equals(itemForEdit.getName())) {
+                                    alreadyHasIgredient = false;
+                                }
+                                else if(MainActivity.shoppingItems.get(i).getName().equals(editedItem.getName())){
                                     alreadyHasIgredient = true;
                                 }
                             }
                             break;
                         case FridgeListAdapter.FRIDGELISTKEY:
                             for(int i = 0; MainActivity.fridgeItems.size() > i ; i++){
-                                if(MainActivity.fridgeItems.get(i).getName().equals(editedItem.getName())){
+                                if(MainActivity.fridgeItems.get(i).getName().equals(itemForEdit.getName())) {
+                                    alreadyHasIgredient = false;
+                                }
+                                else if(MainActivity.fridgeItems.get(i).getName().equals(editedItem.getName())){
                                     alreadyHasIgredient = true;
                                 }
                             }

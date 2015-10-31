@@ -12,7 +12,10 @@ import android.webkit.WebView;
 import android.widget.Button;
 
 import com.tomai.fridgit.ChoosenRecipeActivity;
+import com.tomai.fridgit.Converters;
 import com.tomai.fridgit.Dialogs.MissingIngredientsDialog;
+import com.tomai.fridgit.Item;
+import com.tomai.fridgit.MainActivity;
 import com.tomai.fridgit.R;
 import com.tomai.fridgit.RecipeAPI;
 
@@ -24,9 +27,13 @@ import org.json.JSONObject;
  */
 public class DirectionsForRecipeFragment extends Fragment {
 
-    JSONObject recipe;
-    WebView webview;
-    Handler handler = new Handler();
+    private JSONObject recipe;
+    private WebView webview;
+    private Handler handler = new Handler();
+
+    private Item itemFromFridge;
+    private double ingredientForRecipeAmount;
+    private JSONObject ingredientForRecipe;
 
     @Nullable
     @Override
@@ -60,10 +67,83 @@ public class DirectionsForRecipeFragment extends Fragment {
                 if (!ChoosenRecipeActivity.hasIngredients){
                     MissingIngredientsDialog missingIngredientsDialog = new MissingIngredientsDialog();
                     missingIngredientsDialog.show(getActivity().getFragmentManager(),"missing dialog");
-                    //TODO Create dialog saying "you don't have all ingredient" with three options "i actually do have them", "add them to shopping list" and exit
+                }
+                else{
+                   for(int i = 0; IngredientsForRecipeFragment.ingredientsArrayList.size() > i ;i++){
+                       for(int y = 0; MainActivity.fridgeItems.size() > y; y++) {
+                           try {
+                               ingredientForRecipe = IngredientsForRecipeFragment.ingredientsArrayList.get(i);
+                               ingredientForRecipeAmount = ingredientForRecipe.getDouble("amount");
+                               itemFromFridge = MainActivity.shoppingItems.get(y);
+                               if (ingredientForRecipe.getString("name").equals(itemFromFridge.getName())){
+                                   switch (ingredientForRecipe.getString("unitShort")){
+                                       //teaspoon
+                                       case "t":
+                                           convertAndDeduct("teaspoonUK","liter",Converters.ConverterKind.CookingUnits);
+                                           break;
+                                       //tablespoon
+                                       case "T":
+                                           convertAndDeduct("tablespoonUK","liter",Converters.ConverterKind.CookingUnits);
+                                           break;
+                                       //cups
+                                       case "c":
+                                           convertAndDeduct("cupUS","liter",Converters.ConverterKind.CookingUnits);
+                                           break;
+                                       //pound
+                                       case "lb":
+                                           convertAndDeduct("PoundsTroy","Grams",Converters.ConverterKind.WeightUnits);
+                                           break;
+                                       //servings
+                                       case "servings":
+
+                                           break;
+                                       //ounces
+                                       case "oz":
+                                           convertAndDeduct("OuncesTroyApoth","Grams",Converters.ConverterKind.WeightUnits);
+                                           break;
+                                       //bunch
+                                       case "bunch":
+
+                                           break;
+                                       //dash
+                                       case "dash":
+                                           convertAndDeduct("dash","liter",Converters.ConverterKind.CookingUnits);
+                                           break;
+                                       //slices
+                                       case "slices":
+
+                                           break;
+                                       //cloves
+                                       case "cloves":
+                                           itemFromFridge.changePercentage(ingredientForRecipeAmount);
+                                           break;
+                                       //normal units
+                                       case "":
+                                           itemFromFridge.changePercentage(ingredientForRecipeAmount);
+                                           break;
+
+                                   }
+                                   //TODO find out who all mesurments are written from api.
+                               }
+                           } catch (JSONException e) {
+                               e.printStackTrace();
+                           }
+                       }
+                   }
                 }
             }
         });
         return listFragment;
+    }
+    public void convertAndDeduct(final String amountkind, final String toAmount ,final Converters.ConverterKind converterKind) {
+        new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                Converters converters = new Converters(getContext());
+                double resultTo = Double.parseDouble(converters.cookingUnitConverter(ingredientForRecipeAmount, amountkind, toAmount, converterKind));
+                itemFromFridge.changePercentage(resultTo);
+            }//Converters.ConverterKind.CookingUnits
+        }.start();
     }
 }

@@ -7,27 +7,29 @@ import java.io.Serializable;
  */
 public class Item implements Serializable {
     private String name;
-    private int amount;
+    private double amount;
+    private double amountPercentage;
     private amounts amountKind;
     public enum amounts {
             Grams,
             Liters,
             Units
     }
+
     //TODO have a option to set either imperial or metric
 
 
-    public Item(String name, int amount,  amounts amountKind) {
+    public Item(String name, double amount,  amounts amountKind) {
         this.name = name;
         this.amount = amount;
         this.amountKind = amountKind;
+        amountPercentage = 1;
     }
 
     public Item(String name, amounts amountKind) {
         this.amountKind = amountKind;
         this.name = name;
-
-        //TODO ask teacher if this is good practice
+        amountPercentage = 1;
         this.amount = -1;
     }
 
@@ -39,7 +41,7 @@ public class Item implements Serializable {
         return name;
     }
 
-    public int getAmount() {
+    public double getAmount() {
         return amount;
     }
 
@@ -47,11 +49,19 @@ public class Item implements Serializable {
         this.name = name;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 
     public amounts getAmountKind() {
         return amountKind;
+    }
+
+    public void changePercentage(double forRemove){
+        if (amountKind == amounts.Grams) {
+            forRemove = forRemove * 1000;
+            amountPercentage = amountPercentage - (forRemove/amount);
+        }
+        else amountPercentage = amountPercentage - (forRemove/amount);
     }
 }
